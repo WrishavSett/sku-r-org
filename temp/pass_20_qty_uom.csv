@@ -1,0 +1,3 @@
+itemcode,catcode,category,subcat,ssubcat,company,mbrand,brand,sku,packtype,base_pack,multipack,flavor,color,wght,uom,hpkcnv,msu,launchdate,qty,mrp,status,factcode,activeitem,active,nepalcomm,flag,audittype,price_seg,filter_seg,DELYM
+20110363,118,SOFT DRINKS-NP,SOFT DRINKS,CARBONATED,BOTTLERS NEPAL - NEPAL,SPRITE,SPRITE,PET 2000 ML,PET,2000.000 ML, ,LEMON,,2000.0,ML,0,0,200703.0,2000.0,0.0,,,Y,ACTIVE,,0,2,,,
+99765355,118,SOFT DRINKS-NP,SOFT DRINKS,CARBONATED,BOTTLERS NEPAL - NEPAL,SPRITE,SPRITE,PET 2000 ML+250 ML COCA-COLA FREE,PET,2000.000 ML, ,LEMON,,2000.0,ML,0,0,202503.0,2000.0,220.0,,,Y,ACTIVE,,0,2,,,
