@@ -99,7 +99,14 @@ Rules:
 - Ignore leading or trailing whitespace.
 - Only reply with 'true' or 'false'.
 """
-            response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
+            response = ollama.chat(
+                model="llama3.2:3b",
+                messages=[
+                    {"role": "system", "content": "You are a highly logical and precise data comparison tool. Your only function is to determine if two values match based on a strict set of rules. You will only respond with the exact word 'true' or 'false'."},
+                    {"role": "user", "content": prompt}
+                ],
+                options={'temperature': 0.0, 'top_p': 0.1}
+            )
             if "true" in response["message"]["content"].lower():
                 new_filtered.append(row)
         except Exception as e:
@@ -126,7 +133,14 @@ Rules:
 - The match should be primarily an EXACT MATCH or, a partial, case-insensitive string match where the 'Search value' is present wholly within the 'Row company' value.
 - Only reply with 'true' or 'false'.
 """
-            response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
+            response = ollama.chat(
+                model="llama3.2:3b",
+                messages=[
+                    {"role": "system", "content": "You are a highly logical and precise data comparison tool. Your only function is to determine if two values match based on a strict set of rules. You will only respond with the exact word 'true' or 'false'."},
+                    {"role": "user", "content": prompt}
+                ],
+                options={'temperature': 0.0, 'top_p': 0.1}
+            )
             if "true" in response["message"]["content"].lower():
                 new_filtered.append(row)
         except Exception as e:
@@ -153,7 +167,14 @@ Rules:
 - The match should be primarily an EXACT MATCH or, a partial, case-insensitive string match where the 'Search value' is present wholly within the 'Row brand' value.
 - Only reply with 'true' or 'false'.
 """
-            response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
+            response = ollama.chat(
+                model="llama3.2:3b",
+                messages=[
+                    {"role": "system", "content": "You are a highly logical and precise data comparison tool. Your only function is to determine if two values match based on a strict set of rules. You will only respond with the exact word 'true' or 'false'."},
+                    {"role": "user", "content": prompt}
+                ],
+                options={'temperature': 0.0, 'top_p': 0.1}
+            )
             if "true" in response["message"]["content"].lower():
                 new_filtered.append(row)
         except Exception as e:
@@ -179,7 +200,14 @@ Rules:
 - Ignore differences in case.
 - Only reply with 'true' or 'false'.
 """
-            response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
+            response = ollama.chat(
+                model="llama3.2:3b",
+                messages=[
+                    {"role": "system", "content": "You are a highly logical and precise data comparison tool. Your only function is to determine if two values match based on a strict set of rules. You will only respond with the exact word 'true' or 'false'."},
+                    {"role": "user", "content": prompt}
+                ],
+                options={'temperature': 0.0, 'top_p': 0.1}
+            )
             if "true" in response["message"]["content"].lower():
                 new_filtered.append(row)
         except Exception as e:
@@ -210,7 +238,14 @@ Rules:
 - Both conditions must be met for a 'true' response.
 - Only reply with 'true' or 'false'.
 """
-            response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
+            response = ollama.chat(
+                model="llama3.2:3b",
+                messages=[
+                    {"role": "system", "content": "You are a highly logical and precise data comparison tool. Your only function is to determine if two values match based on a strict set of rules. You will only respond with the exact word 'true' or 'false'."},
+                    {"role": "user", "content": prompt}
+                ],
+                options={'temperature': 0.0, 'top_p': 0.1}
+            )
             if "true" in response["message"]["content"].lower():
                 new_filtered.append(row)
         except Exception as e:
