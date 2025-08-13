@@ -23,7 +23,7 @@ except FileNotFoundError:
 
 master_file_columns = master_file.columns.tolist()
 print("\n|INFO| MASTER FILE columns:\n", master_file_columns)
-# print("|INFO| MASTER FILE head:\n", master_file.head())
+print("|INFO| MASTER FILE head:\n", master_file.head())
 
 
 # TRANSACTION FILE loading and preview
@@ -34,7 +34,7 @@ except FileNotFoundError:
 
 transaction_file_columns = transaction_file.columns.tolist()
 print("\n|INFO| TRANSACTION FILE columns:\n", transaction_file_columns)
-# print("|INFO| TRANSACTION FILE head:\n", transaction_file.head())
+print("|INFO| TRANSACTION FILE head:\n", transaction_file.head())
 
 
 # Query input
@@ -93,9 +93,11 @@ Search value: {search_catcode1}
 Row catcode: {row_value}
 
 Rules:
-- Ignore case
-- Accept exact or partial matches
-- Only reply with 'true' or 'false'
+- The 'Search value' is a numerical category code.
+- The 'Row catcode' is a numerical category code.
+- Both values must be an exact match to be considered 'true'.
+- Ignore leading or trailing whitespace.
+- Only reply with 'true' or 'false'.
 """
             response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
             if "true" in response["message"]["content"].lower():
@@ -119,9 +121,10 @@ Search value: {search_company1}
 Row company: {row_value}
 
 Rules:
-- Ignore case
-- Accept exact or partial matches
-- Only reply with 'true' or 'false'
+- The 'Search value' must be an exact match or contained within the 'Row company' value.
+- Ignore differences in case (e.g., 'APPLE' matches 'apple').
+- The match should be primarily an EXACT MATCH or, a partial, case-insensitive string match where the 'Search value' is present wholly within the 'Row company' value.
+- Only reply with 'true' or 'false'.
 """
             response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
             if "true" in response["message"]["content"].lower():
@@ -145,9 +148,10 @@ Search value: {search_brand1}
 Row brand: {row_value}
 
 Rules:
-- Ignore case
-- Accept exact or partial matches
-- Only reply with 'true' or 'false'
+- The 'Search value' must be an exact or partial match to the 'Row brand' value.
+- Ignore differences in case (e.g., 'APPLE' matches 'apple').
+- The match should be primarily an EXACT MATCH or, a partial, case-insensitive string match where the 'Search value' is present wholly within the 'Row brand' value.
+- Only reply with 'true' or 'false'.
 """
             response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
             if "true" in response["message"]["content"].lower():
@@ -171,9 +175,9 @@ Search value: {search_packtype1}
 Row packtype: {row_value}
 
 Rules:
-- Ignore case
-- Accept exact or partial matches
-- Only reply with 'true' or 'false'
+- The 'Search value' and 'Row packtype' must match exactly.
+- Ignore differences in case.
+- Only reply with 'true' or 'false'.
 """
             response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
             if "true" in response["message"]["content"].lower():
@@ -201,9 +205,10 @@ Search uom: {search_uom1}
 Row uom: {row_uom}
 
 Rules:
-- qty must match exactly as a number
-- uom must match exactly as letters (ignore case)
-- Only reply with 'true' or 'false'
+- 'Search qty' and 'Row qty' must be an exact numerical match.
+- 'Search uom' and 'Row uom' must be an exact, case-insensitive string match.
+- Both conditions must be met for a 'true' response.
+- Only reply with 'true' or 'false'.
 """
             response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
             if "true" in response["message"]["content"].lower():
