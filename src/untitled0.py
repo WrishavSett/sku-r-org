@@ -5,14 +5,14 @@ import numpy as np
 import pandas as pd
 
 
-# temporary folder creation
+# Create temporary and output folders
 os.makedirs("./temp", exist_ok=True)
+os.makedirs("./output", exist_ok=True)
 
 
 # CONFIGURATION
-MODEL_NAME = "llama3.2:3b"
-ENTRY_INDEX = 31
 TEMP_DIR = "./temp"
+OUTPUT_DIR = "./output"
 
 
 # MASTER FILE loading and preview
@@ -20,6 +20,7 @@ try:
     master_file = pd.read_excel("dataset/NP_ItemMaster_Detailed_2025-07.xlsx")
 except FileNotFoundError:
     print("\n|ERROR| MASTER FILE not found")
+    exit()
 
 master_file_columns = master_file.columns.tolist()
 print("\n|INFO| MASTER FILE columns:\n", master_file_columns)
@@ -31,6 +32,7 @@ try:
     transaction_file = pd.read_excel("dataset/NP_NI_Cross-Re_2024-12.xlsx", sheet_name="aug-24")
 except FileNotFoundError:
     print("\n|ERROR| TRANSACTION FILE not found")
+    exit()
 
 transaction_file_columns = transaction_file.columns.tolist()
 print("\n|INFO| TRANSACTION FILE columns:\n", transaction_file_columns)
@@ -38,7 +40,9 @@ print("|INFO| TRANSACTION FILE head:\n", transaction_file.head())
 
 
 # Query input
-entry = 31
+entry = [entry for entry in range(len(transaction_file))]
+search_itemcode1 = str(transaction_file['ITEMCODE'][entry])
+    # "itemcode" corresponds to "ITEMCODE"
 search_catcode1 = str(transaction_file['CATEGORY'][entry])
     # "catcode" corresponds to "CATEGORY"
 search_company1 = str(transaction_file['MANUFACTURE'][entry])
@@ -58,6 +62,7 @@ search_itemdesc1 = str(transaction_file['ITEMDESC'][entry])
 
 
 print(f"""\n|INFO| Search values (from transaction file) for entry '{entry}':
+      ITEMCODE: {search_itemcode1}
       CATCODE: {search_catcode1}
       COMPANY: {search_company1}
       BRAND: {search_brand1}
@@ -68,6 +73,7 @@ print(f"""\n|INFO| Search values (from transaction file) for entry '{entry}':
       ITEMDESC: {search_itemdesc1}""")
 
 
+# LLM Process
 filtered_df = master_file.copy()
 
 def column_exists(df, col):
@@ -259,3 +265,126 @@ Rules:
 # Final output
 print("\n|INFO| Final filtered dataframe:")
 print(filtered_df)
+
+
+# # NumPy Process
+# filtered_df = master_file.copy()
+# last_successful_df = pd.DataFrame()
+
+# def column_exists(df, col):
+#     """Checks if a column exists in a DataFrame."""
+#     if col not in df.columns:
+#         print(f"|WARNING| Column '{col}' missing in master file. Skipping this pass.")
+#         return False
+#     return True
+
+
+# def save_pass_df(df, pass_name, entry_index):
+#     """Saves a DataFrame for a specific pass and entry."""
+#     file_path = os.path.join(TEMP_DIR, f"pass_{entry_index}_{pass_name}.csv")
+#     df.to_csv(file_path, index=False)
+#     print(f"|INFO| Saved {len(df)} rows to {file_path}")
+
+# # Pass 1: catcode (exact match)
+# if column_exists(filtered_df, 'catcode'):
+#     filtered_df = filtered_df[filtered_df['catcode'].astype(str).str.strip() == search_catcode1.strip()]
+#     if not filtered_df.empty:
+#         last_successful_df = filtered_df.copy()
+#     print(f"\n|INFO| After catcode filter: {len(filtered_df)} rows remain")
+#     save_pass_df(filtered_df, "pass_1_catcode")
+
+
+# # Pass 2: company (partial and case-insensitive match)
+# if column_exists(filtered_df, 'company'):
+#     filtered_df = filtered_df[filtered_df['company'].astype(str).str.contains(search_company1, case=False, na=False)]
+#     if not filtered_df.empty:
+#         last_successful_df = filtered_df.copy()
+#     print(f"|INFO| After company filter: {len(filtered_df)} rows remain")
+#     save_pass_df(filtered_df, "pass_2_company")
+
+
+# # Pass 3: brand (partial and case-insensitive match)
+# if column_exists(filtered_df, 'brand'):
+#     filtered_df = filtered_df[filtered_df['brand'].astype(str).str.contains(search_brand1, case=False, na=False)]
+#     if not filtered_df.empty:
+#         last_successful_df = filtered_df.copy()
+#     print(f"|INFO| After brand filter: {len(filtered_df)} rows remain")
+#     save_pass_df(filtered_df, "pass_3_brand")
+
+
+# # Pass 4: packtype (exact and case-insensitive match)
+# if column_exists(filtered_df, 'packtype'):
+#     filtered_df = filtered_df[filtered_df['packtype'].astype(str).str.lower().str.strip() == search_packtype1.lower().strip()]
+#     if not filtered_df.empty:
+#         last_successful_df = filtered_df.copy()
+#     print(f"|INFO| After packtype filter: {len(filtered_df)} rows remain")
+#     save_pass_df(filtered_df, "pass_4_packtype")
+
+
+# # Pass 5: qty + uom (exact numerical match for qty, exact case-insensitive match for uom)
+# if column_exists(filtered_df, 'qty') and column_exists(filtered_df, 'uom'):
+#     try:
+#         search_qty_num = pd.to_numeric(search_qty1)
+#         qty_mask = filtered_df['qty'].astype(float) == search_qty_num
+#         uom_mask = filtered_df['uom'].astype(str).str.lower().str.strip() == search_uom1.lower().strip()
+#         filtered_df = filtered_df[qty_mask & uom_mask]
+#         if not filtered_df.empty:
+#             last_successful_df = filtered_df.copy()
+#     except ValueError:
+#         print(f"|WARNING| Could not convert search_qty1 ('{search_qty1}') to a number. Skipping qty+uom pass.")
+    
+#     print(f"|INFO| After qty+uom filter: {len(filtered_df)} rows remain")
+#     save_pass_df(filtered_df, "pass_5_qty_uom")
+
+
+# # Final output generation
+# FINAL_OUTPUT = pd.DataFrame()
+# if not last_successful_df.empty:
+#     # Get all unique item codes from the last successful pass
+#     m_itemcodes = last_successful_df['itemcode'].unique().tolist()
+
+#     # Determine the number of matches to format the output correctly
+#     if len(m_itemcodes) > 1:
+#         # If there are multiple master file item codes, join them with '||'
+#         # The list comprehension converts each item code to a string before joining.
+#         m_itemcodes_str = ' || '.join([str(item) for item in m_itemcodes])
+
+#         # Create the final output DataFrame with a single row
+#         FINAL_OUTPUT = pd.DataFrame({
+#             't_itemcode': [search_itemcode1],
+#             'm_itemcode(s)': [m_itemcodes_str]
+#         })
+#     elif len(m_itemcodes) == 1:
+#         # If there is only one match, just use the single item code
+#         FINAL_OUTPUT = pd.DataFrame({
+#             't_itemcode': [search_itemcode1],
+#             'm_itemcode(s)': [str(m_itemcodes[0])]
+#         })
+#     else:
+#         # This case is redundant due to the outer if statement, but kept for clarity
+#         # If no matches were found, assign None
+#         FINAL_OUTPUT = pd.DataFrame({
+#             't_itemcode': [search_itemcode1],
+#             'm_itemcode(s)': [None]
+#         })
+
+#     # Print in the desired format
+#     print("\n|OUTPUT| Final filtered item codes:")
+    
+#     # Re-create the string for printing to ensure it's correct
+#     if len(m_itemcodes) > 0:
+#         # Convert items to strings for printing
+#         m_itemcodes_str = ' || '.join([str(item) for item in m_itemcodes])
+#     else:
+#         m_itemcodes_str = None
+        
+#     print(f"{search_itemcode1} | {m_itemcodes_str}")
+
+
+# # Final output
+# print("\n|OUTPUT| Final filtered dataframe:")
+# print(filtered_df)
+
+
+# print("\n|OUTPUT| Final Output DataFrame (t_itemcode, m_itemcode(s)):")
+# print(FINAL_OUTPUT)
