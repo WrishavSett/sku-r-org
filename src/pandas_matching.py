@@ -45,7 +45,9 @@ print("|INFO| MASTER FILE head:\n", master_file.head())
 
 # TRANSACTION FILE loading and preview
 try:
-    transaction_file = pd.read_excel("dataset/NP_NI_Cross-Re_2024-12.xlsx", sheet_name="aug-24")
+    # sheet_names = pd.ExcelFile("dataset/NP_NI_Cross-Re_2024-12.xlsx").sheet_names
+    sheet_name = "aug-24"
+    transaction_file = pd.read_excel("dataset/NP_NI_Cross-Re_2024-12.xlsx", sheet_name=sheet_name)
 except FileNotFoundError:
     print("\n|ERROR| TRANSACTION FILE not found")
     exit()
@@ -296,7 +298,7 @@ def main():
 
 
     # Save and print the final output
-    final_output_path = os.path.join(OUTPUT_DIR, "FINAL_OUTPUT.csv")
+    final_output_path = os.path.join(OUTPUT_DIR, f"output_{sheet_name}.csv")
     FINAL_OUTPUT.to_csv(final_output_path, index=False)
     print(f"\n|OUTPUT| Final results saved to: {final_output_path}")
 
