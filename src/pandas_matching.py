@@ -20,14 +20,16 @@ uom_mapping = {
     "l": "l", "litre": "l",
     "gm": "g", "gram": "g",
     "kg": "kg",
-    "no": "pcs", "pcs": "pcs"
+    "no": "pcs", "pcs": "pcs",
 }
 
 packtype_mapping = {
     "can": "can", "tin": "can", "tin c": "can",
     "pet": "bottle", "pbt": "bottle", "plbot": "bottle", "glbot": "bottle",
     "jar": "jar", "pljar": "jar", "gljar": "jar",
-    "tpk": "tpk", "rgb": "rgb", "hl": "hl"
+    "tpk": "tpk",
+    "rgb": "rgb",
+    "hl": "hl",
 }
 
 
@@ -39,8 +41,8 @@ except FileNotFoundError:
     exit()
 
 master_file_columns = master_file.columns.tolist()
-print("\n|INFO| MASTER FILE columns:\n", master_file_columns)
-print("|INFO| MASTER FILE head:\n", master_file.head())
+# print("\n|INFO| MASTER FILE columns:\n", master_file_columns)
+# print("|INFO| MASTER FILE head:\n", master_file.head())
 
 
 # TRANSACTION FILE loading and preview
@@ -53,8 +55,8 @@ except FileNotFoundError:
     exit()
 
 transaction_file_columns = transaction_file.columns.tolist()
-print("\n|INFO| TRANSACTION FILE columns:\n", transaction_file_columns)
-print("|INFO| TRANSACTION FILE head:\n", transaction_file.head())
+# print("\n|INFO| TRANSACTION FILE columns:\n", transaction_file_columns)
+# print("|INFO| TRANSACTION FILE head:\n", transaction_file.head())
 
 
 # --- Helpers ---
