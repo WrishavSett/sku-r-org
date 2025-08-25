@@ -109,7 +109,9 @@ def process_transaction_entry(entry_index):
 
     # Pass 1: catcode (exact match)
     if column_exists(filtered_df, 'catcode'):
-        filtered_df = filtered_df[filtered_df['catcode'].astype(str).str.strip() == search_catcode1.strip()]
+        filtered_df = filtered_df[filtered_df['catcode']
+                                  .astype(str)
+                                  .str.strip() == search_catcode1.strip()]
         if not filtered_df.empty:
             last_successful_df = filtered_df.copy()
         print(f"|INFO| After catcode filter: {len(filtered_df)} rows remain")
@@ -117,7 +119,9 @@ def process_transaction_entry(entry_index):
 
     # Pass 2: company (partial and case-insensitive match)
     if column_exists(filtered_df, 'company'):
-        filtered_df = filtered_df[filtered_df['company'].astype(str).str.contains(search_company1, case=False, na=False)]
+        filtered_df = filtered_df[filtered_df['company']
+                                  .astype(str)
+                                  .str.contains(search_company1, case=False, na=False)]
         if not filtered_df.empty:
             last_successful_df = filtered_df.copy()
         print(f"|INFO| After company filter: {len(filtered_df)} rows remain")
@@ -125,7 +129,9 @@ def process_transaction_entry(entry_index):
 
     # Pass 3: brand (partial and case-insensitive match)
     if column_exists(filtered_df, 'brand'):
-        filtered_df = filtered_df[filtered_df['brand'].astype(str).str.contains(search_brand1, case=False, na=False)]
+        filtered_df = filtered_df[filtered_df['brand']
+                                  .astype(str)
+                                  .str.contains(search_brand1, case=False, na=False)]
         if not filtered_df.empty:
             last_successful_df = filtered_df.copy()
         print(f"|INFO| After brand filter: {len(filtered_df)} rows remain")
@@ -133,7 +139,10 @@ def process_transaction_entry(entry_index):
 
     # Pass 4: packtype (exact and case-insensitive match)
     if column_exists(filtered_df, 'packtype'):
-        filtered_df = filtered_df[filtered_df['packtype'].astype(str).str.lower().str.strip() == search_packtype1.lower().strip()]
+        filtered_df = filtered_df[filtered_df['packtype']
+                                  .astype(str)
+                                  .str.lower()
+                                  .str.strip() == search_packtype1.lower().strip()]
         if not filtered_df.empty:
             last_successful_df = filtered_df.copy()
         print(f"|INFO| After packtype filter: {len(filtered_df)} rows remain")
